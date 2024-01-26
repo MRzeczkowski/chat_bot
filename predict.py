@@ -22,7 +22,7 @@ def bag_of_words(text, vocab):
 
 def pred_class(text, vocab, labels, model):
     bow = bag_of_words(text, vocab)
-    result = model.predict(np.array([bow]))[0]
+    result = model.predict(np.array([bow]), verbose=0)[0]
     thresh = 0.2
     y_pred = [[idx, res] for idx, res in enumerate(result) if res > thresh]
 
