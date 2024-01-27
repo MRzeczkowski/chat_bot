@@ -43,16 +43,22 @@ def main():
     model = build_model(input_shape, output_shape)
     model = train_model(model, train_X, train_y)
 
-    print("Chatbot is running! Type 'quit' to exit.")
+    print("Chatbot is running! Type 'quit' to exit. Add 'explain' in your question for an explanation.")
     while True:
         message = input("You: ")
         if message.lower() == "quit":
             break
 
-        intents = pred_class(message, words, classes, model)
+        explain = 'explain' in message.lower()
+
+        cleaned_message = message.replace('explain', '').strip()
+
+        intents = pred_class(cleaned_message, words, classes, model)
         if intents:
-            result = get_response(intents, data)
-            print("Bot:", result)
+            response, explanation = get_response(intents, data, explain)
+            print("Bot:", response)
+            if explain and explanation:
+                print("Explanation:", explanation)
         else:
             print("Bot: I don't understand.")
 
