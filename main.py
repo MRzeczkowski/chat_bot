@@ -33,6 +33,10 @@ def create_training_data(words, classes, doc_X, doc_y):
     return train_X, train_y
 
 
+def bot_respond(response):
+    print("Nietzsche bot:", response)
+
+
 def main():
     data = load_data()
     words, classes, doc_X, doc_y = preprocess_data(data)
@@ -43,24 +47,43 @@ def main():
     model = build_model(input_shape, output_shape)
     model = train_model(model, train_X, train_y)
 
-    print("Chatbot is running! Type 'quit' to exit. Add 'explain' in your question for an explanation.")
+    bot_name = '''
+    888b      88 88                                                   88                        88                              
+    8888b     88 ""              ,d                                   88                        88                       ,d     
+    88 `8b    88                 88                                   88                        88                       88     
+    88  `8b   88 88  ,adPPYba, MM88MMM 888888888 ,adPPYba,  ,adPPYba, 88,dPPYba,   ,adPPYba,    88,dPPYba,   ,adPPYba, MM88MMM  
+    88   `8b  88 88 a8P_____88   88         a8P" I8[    "" a8"     "" 88P'    "8a a8P_____88    88P'    "8a a8"     "8a  88     
+    88    `8b 88 88 8PP"""""""   88      ,d8P'    `"Y8ba,  8b         88       88 8PP"""""""    88       d8 8b       d8  88     
+    88     `8888 88 "8b,   ,aa   88,   ,d8"      aa    ]8I "8a,   ,aa 88       88 "8b,   ,aa    88b,   ,a8" "8a,   ,a8"  88,    
+    88      `888 88  `"Ybbd8"'   "Y888 888888888 `"YbbdP"'  `"Ybbd8"' 88       88  `"Ybbd8"'    8Y"Ybbd8"'   `"YbbdP"'   "Y888  
+'''
+
+    print(bot_name)
+    print("Nietzsche bot is running! To exit simply say goodby to the bot. Prompt 'explain' after your question for an explanation - if there is one.\n")
+    last_explanation = None
+
     while True:
         message = input("You: ")
-        if message.lower() == "quit":
-            break
 
-        explain = 'explain' in message.lower()
+        is_explanation_requested = 'explain' in message.lower()
 
-        cleaned_message = message.replace('explain', '').strip()
+        if is_explanation_requested and last_explanation:
+            bot_respond(last_explanation)
+            last_explanation = None
+            continue
 
-        intents = pred_class(cleaned_message, words, classes, model)
+        intents = pred_class(message, words, classes, model)
         if intents:
-            response, explanation = get_response(intents, data, explain)
-            print("Bot:", response)
-            if explain and explanation:
-                print("Explanation:", explanation)
+            response, explanation = get_response(intents, data)
+            bot_respond(response)
+
+            if "goodbye" in intents:
+                break  # Exit the chatbot
+
+            last_explanation = explanation if explanation else None
         else:
-            print("Bot: I don't understand.")
+            bot_respond(
+                "A labyrinth of thought yet to be unraveled; understanding eludes me.")
 
 
 if __name__ == "__main__":
