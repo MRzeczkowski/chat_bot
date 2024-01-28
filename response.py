@@ -1,17 +1,27 @@
 import random
 
 
+def get_responses_exhausted_response(intent_json):
+    return random.choice(intent_json["responses_exhausted"])
+
+
+def has_greeted(context):
+    return "greeting" in context['user_intents']
+
+
 def get_response(intent, intents_json, context):
-    all_responses_used_response = "It seems we have explored all there is on this topic."
     no_explanation_response = "Beyond words, it stands self-evident, needing no further elucidation."
 
-    if intent == "greeting" and "greeting" in context['user_intents']:
-        return None, "We've already exchanged pleasantries, but it's good to continue our dialogue.", no_explanation_response
+    initial_greeting = "" if not has_greeted(
+        context) else "Greetings! Now, to your question: "
 
     used_responses = context["used_responses"]
 
     for i, intent_json in enumerate(intents_json["intents"]):
         if intent_json["tag"] == intent:
+
+            if intent == "greeting" and has_greeted(context):
+                return None, get_responses_exhausted_response(intent_json), no_explanation_response
 
             available_responses = [
                 idx for idx, _ in enumerate(intent_json["responses"])
@@ -19,12 +29,13 @@ def get_response(intent, intents_json, context):
             ]
 
             if not available_responses:
-                return None, all_responses_used_response, no_explanation_response
+                return None, get_responses_exhausted_response(intent_json), no_explanation_response
 
             response_index = random.choice(available_responses)
 
             response_obj = intent_json["responses"][response_index]
-            response = response_obj["text"]
+            response = initial_greeting + response_obj["text"]
             explanation = response_obj.get(
                 "explanation", no_explanation_response)
+
             return response_index, response, explanation

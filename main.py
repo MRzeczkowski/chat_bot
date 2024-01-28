@@ -72,9 +72,20 @@ def main():
 
     print(bot_name)
 
-    print("I am here to share insights and thoughts in the spirit of Friedrich Nietzsche.\n"
-          "Ask me about philosophy, quotes, or concepts, and I shall endeavor to provide enlightenment.\n"
-          "To exit, simply say goodbye. Prompt 'explain' after your question for an in-depth explanation, if available.\n")
+    print("""
+Welcome to a dialogue with the spirit of Friedrich Nietzsche, the profound philosopher who challenged the foundations of traditional thought.
+In my essence as a digital Nietzsche, I am here to share insights and provoke thoughts that echo his revolutionary ideas.
+
+- Ask me about my life, my philosophies, and the depths of existential thought.
+- Delve into my books and works to uncover the layers of meaning in texts such as 'Thus Spoke Zarathustra' and 'Beyond Good and Evil'.
+- Explore how my ideas resonate in the modern world and apply to contemporary issues.
+- Seek wisdom through my quotes, each a window into the complexities of life and existence.
+
+Should you desire a deeper understanding, prompt 'explain' after your question for an in-depth exploration of my responses.
+And when the time comes to part ways, simply bid me goodbye.
+
+Now, what philosophical paths shall we tread together today?
+""")
 
     last_explanation = None
 
