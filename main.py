@@ -49,6 +49,28 @@ def update_context(context, intent, response_id):
     context['user_intents'] = context['user_intents'][-5:]
 
 
+def process_user_input(message, context, model, words, classes, data):
+    is_explanation_requested = 'explain' in message.lower()
+    if is_explanation_requested and context.get('last_explanation'):
+        bot_respond(context['last_explanation'])
+        context['last_explanation'] = None
+        return False
+
+    intents = pred_class(message, words, classes, model)
+    if intents:
+        intent = intents[0]
+        response_id, response, explanation = get_response(
+            intent, data, context)
+        bot_respond(response)
+        update_context(context, intent, response_id)
+        context['last_explanation'] = explanation if explanation else None
+        return intent == "goodbye"
+    else:
+        bot_respond(
+            "A labyrinth of thought yet to be unraveled; understanding eludes me.")
+        return False
+
+
 def main():
     data = load_data()
     words, classes, doc_X, doc_y = preprocess_data(data)
@@ -87,37 +109,13 @@ And when the time comes to part ways, simply bid me goodbye.
 Now, what philosophical paths shall we tread together today?
 """)
 
-    last_explanation = None
-
-    # Initialize conversation context
-    context = {'user_intents': [], 'used_responses': {}}
+    context = {'user_intents': [],
+               'used_responses': {}, 'last_explanation': None}
 
     while True:
         message = input("You: ")
-
-        is_explanation_requested = 'explain' in message.lower()
-
-        if is_explanation_requested and last_explanation:
-            bot_respond(last_explanation)
-            last_explanation = None
-            continue
-
-        intents = pred_class(message, words, classes, model)
-
-        if intents:
-            intent = intents[0]
-            response_id, response, explanation = get_response(
-                intent, data, context)
-            bot_respond(response)
-            update_context(context, intent, response_id)
-
-            if "goodbye" in intents:
-                break
-
-            last_explanation = explanation if explanation else None
-        else:
-            bot_respond(
-                "A labyrinth of thought yet to be unraveled; understanding eludes me.")
+        if process_user_input(message, context, model, words, classes, data):
+            break
 
 
 if __name__ == "__main__":

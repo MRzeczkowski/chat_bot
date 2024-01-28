@@ -27,27 +27,24 @@ def get_response(intent, intents_json, context):
 
     used_responses = context["used_responses"]
 
-    for i, intent_json in enumerate(intents_json["intents"]):
-        if intent_json["tag"] == intent:
+    intent_data = next(
+        (item for item in intents_json["intents"] if item["tag"] == intent), None)
+    if intent_data:
 
-            if intent == greeting_intent and has_already_greeted(context):
-                return None, get_responses_exhausted_response(intent_json), no_explanation_response
+        if intent == greeting_intent and has_already_greeted(context):
+            return None, get_responses_exhausted_response(intent_data), no_explanation_response
 
-            responses = intent_json["responses"]
+        responses = intent_data["responses"]
+        available_responses = [idx for idx, _ in enumerate(
+            responses) if idx not in used_responses.get(intent, [])]
 
-            available_responses = [
-                idx for idx, _ in enumerate(responses)
-                if idx not in used_responses.get(intent, [])
-            ]
+        if not available_responses:
+            return None, get_responses_exhausted_response(intent_data), no_explanation_response
 
-            if not available_responses:
-                return None, get_responses_exhausted_response(intent_json), no_explanation_response
+        response_index = random.choice(available_responses)
+        response_obj = responses[response_index]
+        response = initial_greeting + response_obj["text"]
+        explanation = response_obj.get("explanation", no_explanation_response)
+        return response_index, response, explanation
 
-            response_index = random.choice(available_responses)
-
-            response_obj = responses[response_index]
-            response = initial_greeting + response_obj["text"]
-            explanation = response_obj.get(
-                "explanation", no_explanation_response)
-
-            return response_index, response, explanation
+    return None, "I'm not sure how to respond to that.", no_explanation_response
