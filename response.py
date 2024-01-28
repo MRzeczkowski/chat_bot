@@ -15,7 +15,7 @@ def has_already_greeted(context):
 def get_response(intent, intents_json, context):
 
     if not has_already_greeted(context):
-        if intent == greeting_intent:
+        if intent == greeting_intent or intent == "goodbye":
             initial_greeting = ""
         else:
             # Updating context to make sure not to greet again.

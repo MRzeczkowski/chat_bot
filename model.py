@@ -22,5 +22,5 @@ def build_model(input_shape, output_shape):
 
 
 def train_model(model, train_X, train_y, epochs=200):
-    model.fit(x=train_X, y=train_y, epochs=epochs, verbose=1)
+    model.fit(x=train_X, y=train_y, epochs=epochs, verbose=0)
     return model
