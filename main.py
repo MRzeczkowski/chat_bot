@@ -37,6 +37,18 @@ def bot_respond(response):
     print("Nietzsche bot:", response)
 
 
+def update_context(context, intent, response_id):
+    context['user_intents'].append(intent)
+
+    if intent not in context['used_responses']:
+        context['used_responses'][intent] = []
+
+    if response_id != None:
+        context['used_responses'][intent].append(response_id)
+
+    context['user_intents'] = context['user_intents'][-5:]
+
+
 def main():
     data = load_data()
     words, classes, doc_X, doc_y = preprocess_data(data)
@@ -59,8 +71,15 @@ def main():
 '''
 
     print(bot_name)
-    print("Nietzsche bot is running! To exit simply say goodby to the bot. Prompt 'explain' after your question for an explanation - if there is one.\n")
+
+    print("I am here to share insights and thoughts in the spirit of Friedrich Nietzsche.\n"
+          "Ask me about philosophy, quotes, or concepts, and I shall endeavor to provide enlightenment.\n"
+          "To exit, simply say goodbye. Prompt 'explain' after your question for an in-depth explanation, if available.\n")
+
     last_explanation = None
+
+    # Initialize conversation context
+    context = {'user_intents': [], 'used_responses': {}}
 
     while True:
         message = input("You: ")
@@ -73,12 +92,16 @@ def main():
             continue
 
         intents = pred_class(message, words, classes, model)
+
         if intents:
-            response, explanation = get_response(intents, data)
+            intent = intents[0]
+            response_id, response, explanation = get_response(
+                intent, data, context)
             bot_respond(response)
+            update_context(context, intent, response_id)
 
             if "goodbye" in intents:
-                break  # Exit the chatbot
+                break
 
             last_explanation = explanation if explanation else None
         else:
