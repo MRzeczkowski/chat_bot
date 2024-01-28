@@ -1,14 +1,17 @@
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
+from tensorflow.keras.regularizers import l2
 
 
 def build_model(input_shape, output_shape):
     model = Sequential()
-    model.add(Dense(128, input_shape=input_shape, activation="relu"))
+    model.add(Dense(128, input_shape=input_shape,
+              activation="relu", kernel_regularizer=l2(1e-4)))
+    model.add(BatchNormalization())
     model.add(Dropout(0.5))
-    model.add(Dense(64, activation="relu"))
+    model.add(Dense(64, activation="relu", kernel_regularizer=l2(1e-4)))
+    model.add(BatchNormalization())
     model.add(Dropout(0.3))
     model.add(Dense(output_shape, activation="softmax"))
 
