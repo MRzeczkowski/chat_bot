@@ -1,13 +1,13 @@
 # Nietzsche Chatbot
 
 ## Description
-Welcome to the Nietzsche Chatbot, an interactive AI conversational agent designed to simulate discussions with the famous philosopher Friedrich Nietzsche. This simple chatbot leverages natural language processing and machine learning to respond to inquiries about Nietzsche's life, philosophies, and literary works, and to engage users in thought-provoking dialogues.
+This is an interactive AI conversational agent designed to simulate discussions with the famous philosopher Friedrich Nietzsche. This simple chatbot leverages natural language processing  to identifying the users intent and respond to inquiries about Nietzsche's life, philosophies, and literary works, and to engage users in thought-provoking dialogues.
 
 ## Features
-- Engage in conversations inspired by Nietzsche's philosophies.
-- Explore Nietzsche's major works and quotes.
-- Deepen understanding with explanations of complex philosophical concepts.
-- Context-aware conversations with dynamic response handling.
+- Conversations inspired by Nietzsche's philosophies.
+- Somewhat context-aware conversations.
+- Followup questions that steer the user to different topics.
+- When each response from a topic has been exhausted the user is informed about it.
 
 ## Sources:
 - https://towardsdatascience.com/a-simple-chatbot-in-python-with-deep-learning-3e8669997758 - this was the foundation of the bot

@@ -153,8 +153,9 @@ In my essence as a digital Nietzsche, I am here to share insights and provoke th
 - Explore how my ideas resonate in the modern world and apply to contemporary issues.
 - Seek wisdom through my quotes, each a window into the complexities of life and existence.
 
-Should you desire a deeper understanding, prompt 'explain' after your question for an in-depth exploration of my responses.
-And when the time comes to part ways, simply bid me goodbye.
+I'll let you know when a topic has been exhausted, if I have some more information on the topic and ask you if you'd like to know about a different topic.
+
+When the time comes to part ways, simply bid me goodbye.
 
 Now, what philosophical paths shall we tread together today?
 """)
