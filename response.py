@@ -13,7 +13,6 @@ def has_already_greeted(context):
 
 
 def get_response(intent, intents_json, context):
-    no_explanation_response = "Beyond words, it stands self-evident, needing no further elucidation."
 
     if not has_already_greeted(context):
         if intent == greeting_intent:
@@ -32,19 +31,29 @@ def get_response(intent, intents_json, context):
     if intent_data:
 
         if intent == greeting_intent and has_already_greeted(context):
-            return None, get_responses_exhausted_response(intent_data), no_explanation_response
+            return None, get_responses_exhausted_response(intent_data), None, None, None
 
         responses = intent_data["responses"]
         available_responses = [idx for idx, _ in enumerate(
             responses) if idx not in used_responses.get(intent, [])]
 
         if not available_responses:
-            return None, get_responses_exhausted_response(intent_data), no_explanation_response
+            return None, get_responses_exhausted_response(intent_data), None, None, None
 
         response_index = random.choice(available_responses)
         response_obj = responses[response_index]
         response = initial_greeting + response_obj["text"]
-        explanation = response_obj.get("explanation", no_explanation_response)
-        return response_index, response, explanation
+        explanation = response_obj.get("explanation", None)
 
-    return None, "I'm not sure how to respond to that.", no_explanation_response
+        followup_questions = intent_data.get("followup_questions", [])
+
+        if not followup_questions:
+            return response_index, response, explanation, None, None
+
+        followup_question_obj = random.choice(followup_questions)
+        question = followup_question_obj.get("question", None)
+        proposed_intent = followup_question_obj.get("proposed_intent", None)
+
+        return response_index, response, explanation, question, proposed_intent
+
+    return None, "I'm not sure how to respond to that.", None, None, None

@@ -44,6 +44,16 @@
                 "Once more, we find ourselves at conversation's start. But fret not, for each greeting bears a new thought.",
                 "As Zarathustra repeated his descent, so we repeat our greetings. What new wisdom shall this day bring?",
                 "Ah, the eternal recurrence of greeting! Let us not dwell on formalities, but dive deeper into the chasm of thought."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to delve into the depths of my philosophy?",
+                    "proposed_intent": "concepts"
+                },
+                {
+                    "question": "Interested in the saga of my life?",
+                    "proposed_intent": "life-of-nietzsche"
+                }
             ]
         },
         {
@@ -87,6 +97,16 @@
                 "We have traversed the narrative of my mortal coil. Is there another philosophical quest you wish to embark upon?",
                 "Our journey through the chronicles of my life reaches its end. Shall we now dance with the ideas born from this life?",
                 "The tale of my earthly sojourn has been told. What other Nietzschean inquiries beckon your curious mind?"
+            ],
+            "followup_questions": [
+                {
+                    "question": "Shall we explore the essence of my written works?",
+                    "proposed_intent": "nietzsches-books-and-works"
+                },
+                {
+                    "question": "Curious about the core ideas I championed?",
+                    "proposed_intent": "concepts"
+                }
             ]
         },
         {
@@ -129,6 +149,16 @@
                 "We have browsed through the shelves of my literary creations. Is there a particular work or theme you would like to explore further?",
                 "The pages of my works have been turned; each a chapter in my philosophical journey. What else sparks your curiosity in the realm of my thought?",
                 "As the last word of my written legacy has been read, let us now embark upon a new quest for understanding. What philosophical inquiries beckon you?"
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to ponder over the central concepts of my philosophical teachings?",
+                    "proposed_intent": "concepts"
+                },
+                {
+                    "question": "May I interest you in the journey of my life?",
+                    "proposed_intent": "life-of-nietzsche"
+                }
             ]
         },
         {
@@ -168,6 +198,16 @@
                 "Our discourse on these concepts has reached its zenith; perhaps new questions will unearth further insights.",
                 "As the seasons cycle inevitably, so too do our discussions. On these matters, there is no more to be said.",
                 "The depths of these thoughts have been plumbed; let us cast our philosophical nets into new waters."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Does the chronicle of my existence intrigue you?",
+                    "proposed_intent": "life-of-nietzsche"
+                },
+                {
+                    "question": "Would you care to explore my literary contributions?",
+                    "proposed_intent": "nietzsches-books-and-works"
+                }
             ]
         },
         {
@@ -204,45 +244,16 @@
                 "The wellspring of discourse on the Will to Power runs dry, yet countless other streams of thought await our exploration.",
                 "We have unfurled the layers of the Will to Power, a concept as boundless as the sea yet finite in words.",
                 "Our dialogue on the Will to Power reaches its twilight, yet the dawn of new philosophical quests beckons."
-            ]
-        },
-        {
-            "tag": "ubermensch",
-            "patterns": [
-                "Tell me more about the Übermensch",
-                "What is the Übermensch?",
-                "Explain your concept of the Übermensch",
-                "What did you mean by Übermensch?",
-                "Can you describe the Übermensch?",
-                "I want to understand the Übermensch",
-                "What’s your idea of the Übermensch?",
-                "How do you define the Übermensch?",
-                "Why is the Übermensch important in your philosophy?",
-                "Is the Übermensch a superhuman?"
             ],
-            "responses": [
+            "followup_questions": [
                 {
-                    "text": "The Übermensch, or 'Overman', represents a being who has overcome the conventional human condition and transcended traditional values and morals.",
-                    "explanation": "This concept is not about physical superiority but a transcendental state. The Übermensch embodies ultimate self-mastery and creativity, rejecting passive acceptance of societal norms in favor of creating one’s own values."
+                    "question": "Interested in another of my key concepts, perhaps the Übermensch?",
+                    "proposed_intent": "ubermensch"
                 },
                 {
-                    "text": "In my vision, the Übermensch is an aspirational figure, a goal for humanity to strive towards, embodying the creation of new values in the wake of the 'death of God'.",
-                    "explanation": "The Übermensch symbolizes a future human who crafts his own destiny and values, living life with a profound 'Yes!' to existence, unburdened by traditional, obsolete moralities."
-                },
-                {
-                    "text": "The Übermensch is the antithesis to the 'last man', a mediocre being devoid of any significant purpose or ambition. It is the pinnacle of human potential, a creator of new meaning.",
-                    "explanation": "This concept challenges us to question and overcome our own limitations, to forge new paths in the wilderness of uncharted moral landscapes. It's an ideal of human evolution beyond current constraints."
-                },
-                {
-                    "text": "For me, the Übermensch is not a fixed entity but a perpetual becoming, an individual who continually transcends, redefines, and masters their existence.",
-                    "explanation": "It’s about becoming a life-affirming force, one who shapes reality according to a unique vision, standing in stark contrast to passive, nihilistic or herd-like existence."
+                    "question": "Shall we contemplate the implications of my thought in modern times?",
+                    "proposed_intent": "modern-application-nietzsche"
                 }
-            ],
-            "responses_exhausted": [
-                "Our journey through the concept of the Übermensch reaches its zenith. Let us now venture into other realms of thought.",
-                "Like the Übermensch, who transcends the ordinary, we too must surpass our current discourse and seek new horizons.",
-                "We have delved deep into the essence of the Übermensch, an odyssey of the mind now complete. What new adventure shall we embark upon?",
-                "As the Übermensch symbolizes continual overcoming, so must our conversation evolve, moving beyond the bounds of this singular topic."
             ]
         },
         {
@@ -286,6 +297,16 @@
                 "We have circled the concept of Eternal Recurrence exhaustively. Let us now break this loop and seek fresh philosophical pastures.",
                 "In the spirit of Eternal Recurrence, our discussion repeats its conclusion. Shall we venture into unexplored dialogues?",
                 "The wheel of our dialogue on Eternal Recurrence has come full circle. It is time to roll our thoughts toward new horizons."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to explore the nuances of Master-Slave Morality?",
+                    "proposed_intent": "master-slave-morality"
+                },
+                {
+                    "question": "Shall we shift our focus to the existential implications of 'God is Dead'?",
+                    "proposed_intent": "god-is-dead"
+                }
             ]
         },
         {
@@ -329,6 +350,16 @@
                 "Our exploration of Master-Slave Morality has reached its terminus. What other realms of thought shall we now ponder?",
                 "We have thoroughly dissected the nuances of Master and Slave Moralities. It's time to ascend to different peaks of wisdom.",
                 "The discourse on Master and Slave Morality concludes here. Shall we delve into other aspects of the human condition?"
+            ],
+            "followup_questions": [
+                {
+                    "question": "Interested in discussing the concept of the Übermensch?",
+                    "proposed_intent": "ubermensch"
+                },
+                {
+                    "question": "Would you like to dive deeper into the idea of Eternal Recurrence?",
+                    "proposed_intent": "eternal-recurrence"
+                }
             ]
         },
         {
@@ -372,6 +403,16 @@
                 "As we have delved into the implications of 'God is Dead', let us now turn to uncharted territories of thought.",
                 "Our discourse on this proclamation concludes, yet the philosophical journey beckons us forward.",
                 "In the wake of 'God is Dead', let us ponder what new truths we can unearth in this godless expanse."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Interested in exploring how my thoughts apply to the modern world?",
+                    "proposed_intent": "modern-application-nietzsche"
+                },
+                {
+                    "question": "Shall we delve into my influential quotes?",
+                    "proposed_intent": "quotes"
+                }
             ]
         },
         {
@@ -411,6 +452,16 @@
                 "As the Übermensch transcends, so must our conversation. Let us seek new philosophical summits to scale.",
                 "Our exploration of the Übermensch has reached its zenith. Perhaps it is time to venture into different realms of my philosophy.",
                 "Having exhaustively discussed the Übermensch, let us now turn our gaze to other deep wells of thought and contemplation."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to discuss the notion of Eternal Recurrence?",
+                    "proposed_intent": "eternal-recurrence"
+                },
+                {
+                    "question": "Care to delve into another philosophical realm, such as Master-Slave Morality?",
+                    "proposed_intent": "master-slave-morality"
+                }
             ]
         },
         {
@@ -452,6 +503,16 @@
             "responses_exhausted": [
                 "It seems we have thoroughly explored my philosophy's modern applications. Is there another angle of my work you wish to discuss?",
                 "Our exploration of my ideas in the context of today's world has been extensive. Are there other philosophical topics or questions you're curious about?"
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to hear some of my poignant quotes?",
+                    "proposed_intent": "quotes"
+                },
+                {
+                    "question": "Curious about my personal history and its influence on my philosophy?",
+                    "proposed_intent": "life-of-nietzsche"
+                }
             ]
         },
         {
@@ -490,6 +551,16 @@
                 "Our exchange of quotes reaches its end, but the journey through the labyrinth of philosophy continues.",
                 "Like leaves in the wind, words scatter, but their essence remains. Let us explore the roots from which these quotes grew.",
                 "The garden of quotes has been fully wandered. Let us now turn to the soil of thought that nourished these blooms."
+            ],
+            "followup_questions": [
+                {
+                    "question": "Would you like to discuss the relevance of my ideas in the contemporary world?",
+                    "proposed_intent": "modern-application-nietzsche"
+                },
+                {
+                    "question": "Shall we return to the exploration of my core philosophical concepts?",
+                    "proposed_intent": "concepts"
+                }
             ]
         },
         {

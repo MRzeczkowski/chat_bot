@@ -33,8 +33,11 @@ def create_training_data(words, classes, doc_X, doc_y):
     return train_X, train_y
 
 
+bot_message_prefix = "Nietzsche bot:"
+
+
 def bot_respond(response):
-    print("Nietzsche bot:", response)
+    print(bot_message_prefix, response)
 
 
 def update_context(context, intent, response_id):
@@ -49,22 +52,69 @@ def update_context(context, intent, response_id):
     context['user_intents'] = context['user_intents'][-5:]
 
 
-def process_user_input(message, context, model, words, classes, data):
-    is_explanation_requested = 'explain' in message.lower()
-    if is_explanation_requested and context.get('last_explanation'):
-        bot_respond(context['last_explanation'])
-        context['last_explanation'] = None
-        return False
+last_explanation = None
+last_question = None
+last_proposed_intent = None
 
+
+def ask_question(data, context):
+    global last_question
+    global last_proposed_intent
+
+    if last_question:
+        user_input = input(
+            bot_message_prefix + " " + last_question + " (yes/no): ").strip().lower()
+
+        if user_input.lower() in ["yes", "y"]:
+            handle_intent(last_proposed_intent, data, context)
+        else:
+            bot_respond("Let's dive into a different topic then!")
+
+    last_proposed_intent = None
+
+
+def ask_for_explanation():
+    global last_explanation
+
+    if last_explanation:
+        user_input = input(
+            bot_message_prefix + " Seek further insight? (yes/no): ").strip().lower()
+
+        if user_input in ["yes", "y"]:
+            bot_respond(last_explanation)
+        else:
+            bot_respond("Very well!")
+
+    last_explanation = None
+
+
+def handle_intent(intent, data, context):
+    response_id, response, explanation, question, proposed_intent = get_response(
+        intent, data, context)
+
+    global last_explanation
+    last_explanation = explanation
+
+    global last_question
+    last_question = question
+
+    global last_proposed_intent
+    last_proposed_intent = proposed_intent
+
+    bot_respond(response)
+    update_context(context, intent, response_id)
+
+    ask_for_explanation()
+    ask_question(data, context)
+
+    return intent == "goodbye"
+
+
+def process_user_input(message, context, model, words, classes, data):
     intents = pred_class(message, words, classes, model)
     if intents:
         intent = intents[0]
-        response_id, response, explanation = get_response(
-            intent, data, context)
-        bot_respond(response)
-        update_context(context, intent, response_id)
-        context['last_explanation'] = explanation if explanation else None
-        return intent == "goodbye"
+        return handle_intent(intent, data, context)
     else:
         bot_respond(
             "A labyrinth of thought yet to be unraveled; understanding eludes me.")
@@ -109,8 +159,7 @@ And when the time comes to part ways, simply bid me goodbye.
 Now, what philosophical paths shall we tread together today?
 """)
 
-    context = {'user_intents': [],
-               'used_responses': {}, 'last_explanation': None}
+    context = {'user_intents': [], 'used_responses': {}}
 
     while True:
         message = input("You: ")
