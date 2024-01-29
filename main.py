@@ -7,8 +7,136 @@ import random
 import nltk
 from nltk.stem import WordNetLemmatizer
 
+data = None
+words = None
+classes = None
+model = None
+context = {'user_intents': [], 'used_responses': {}}
 
-def create_training_data(words, classes, doc_X, doc_y):
+last_explanation = None
+last_question = None
+last_proposed_intent = None
+
+user_message_prefix = "You: "
+bot_message_prefix = "Nietzsche bot:"
+
+confusion_responses = [
+    "Ah, the abyss gazes back. Shall we choose a different path?",
+    "In this labyrinth of thought, clarity eludes us. Let us seek a new trail.",
+    "Our discourse falters in obscurity. Let us redirect our pursuit of truth."
+]
+
+explanation_questions = [
+    "Would you like to know more?",
+    "Should we explore this further?",
+    "Interested in hearing more?",
+    "Do you wish to continue on this topic?",
+    "Shall we go deeper into this subject?",
+    "Would you like more explanation?",
+    "Should I elaborate on this?",
+    "Would you like to delve deeper?",
+    "Are you interested in more details?",
+    "Should we expand on this further?"
+]
+
+
+not_intent_responses = [
+    "Your words, like shadows, elude my grasp. Let us find a clearer ground.",
+    "The veil of confusion descends. Perhaps a new topic will lift it.",
+    "In the dance of dialogue, I falter. Let's change the rhythm of our discourse."
+]
+
+
+def ask_question():
+
+    if last_question:
+        bot_respond(last_question)
+
+        intent = get_intent_from_user()
+
+        if intent == "interest":
+            respond_to_intent(intent)
+            handle_intent(last_proposed_intent)
+        elif intent == "disinterest":
+            respond_to_intent(intent)
+        else:
+            handle_intent(intent)
+
+
+def ask_for_explanation():
+
+    if last_explanation:
+        bot_respond(random.choice(explanation_questions))
+
+        intent = get_intent_from_user()
+
+        if intent == "interest":
+            respond_to_intent(intent)
+            bot_respond(last_explanation)
+        elif intent == "disinterest":
+            respond_to_intent(intent)
+        else:
+            handle_intent(intent)
+
+
+def save_additional_response_info(explanation, question, proposed_intent):
+    global last_explanation
+    last_explanation = explanation
+
+    global last_question
+    last_question = question
+
+    global last_proposed_intent
+    last_proposed_intent = proposed_intent
+
+
+def update_context(intent, response_id):
+    context['user_intents'].append(intent)
+
+    if intent not in context['used_responses']:
+        context['used_responses'][intent] = []
+
+    if response_id != None:
+        context['used_responses'][intent].append(response_id)
+
+    context['user_intents'] = context['user_intents'][-5:]
+
+
+def bot_respond(response):
+    print(bot_message_prefix, response)
+
+
+def respond_to_intent(intent):
+    response_id, response, explanation, question, proposed_intent = get_response(
+        intent, data, context)
+
+    bot_respond(response)
+    return response_id, explanation, question, proposed_intent
+
+
+def handle_intent(intent):
+    response_id, explanation, question, proposed_intent = respond_to_intent(
+        intent)
+
+    update_context(intent, response_id)
+
+    save_additional_response_info(explanation, question, proposed_intent)
+
+    ask_for_explanation()
+    ask_question()
+
+
+def get_intent_from_user():
+    message = input(user_message_prefix)
+    intents = pred_class(message, words, classes, model)
+    if intents:
+        intent = intents[0]
+        return intent
+    else:
+        return None
+
+
+def create_training_data(doc_X, doc_y):
     training = []
     out_empty = [0] * len(classes)
 
@@ -33,101 +161,19 @@ def create_training_data(words, classes, doc_X, doc_y):
     return train_X, train_y
 
 
-bot_message_prefix = "Nietzsche bot:"
-
-
-def bot_respond(response):
-    print(bot_message_prefix, response)
-
-
-def update_context(context, intent, response_id):
-    context['user_intents'].append(intent)
-
-    if intent not in context['used_responses']:
-        context['used_responses'][intent] = []
-
-    if response_id != None:
-        context['used_responses'][intent].append(response_id)
-
-    context['user_intents'] = context['user_intents'][-5:]
-
-
-last_explanation = None
-last_question = None
-last_proposed_intent = None
-
-
-def ask_question(data, context):
-    global last_question
-    global last_proposed_intent
-
-    if last_question:
-        user_input = input(
-            bot_message_prefix + " " + last_question + " (yes/no): ").strip().lower()
-
-        if user_input.lower() in ["yes", "y"]:
-            handle_intent(last_proposed_intent, data, context)
-        else:
-            bot_respond("Let's dive into a different topic then!")
-
-    last_proposed_intent = None
-
-
-def ask_for_explanation():
-    global last_explanation
-
-    if last_explanation:
-        user_input = input(
-            bot_message_prefix + " Seek further insight? (yes/no): ").strip().lower()
-
-        if user_input in ["yes", "y"]:
-            bot_respond(last_explanation)
-        else:
-            bot_respond("Very well!")
-
-    last_explanation = None
-
-
-def handle_intent(intent, data, context):
-    response_id, response, explanation, question, proposed_intent = get_response(
-        intent, data, context)
-
-    global last_explanation
-    last_explanation = explanation
-
-    global last_question
-    last_question = question
-
-    global last_proposed_intent
-    last_proposed_intent = proposed_intent
-
-    bot_respond(response)
-    update_context(context, intent, response_id)
-
-    ask_for_explanation()
-    ask_question(data, context)
-
-    return intent == "goodbye"
-
-
-def process_user_input(message, context, model, words, classes, data):
-    intents = pred_class(message, words, classes, model)
-    if intents:
-        intent = intents[0]
-        return handle_intent(intent, data, context)
-    else:
-        bot_respond(
-            "A labyrinth of thought yet to be unraveled; understanding eludes me.")
-        return False
-
-
 def main():
+    global data
     data = load_data()
+
+    global words
+    global classes
     words, classes, doc_X, doc_y = preprocess_data(data)
-    train_X, train_y = create_training_data(words, classes, doc_X, doc_y)
+    train_X, train_y = create_training_data(doc_X, doc_y)
 
     input_shape = (len(train_X[0]),)
     output_shape = len(train_y[0])
+
+    global model
     model = build_model(input_shape, output_shape)
     model = train_model(model, train_X, train_y)
 
@@ -160,12 +206,21 @@ When the time comes to part ways, simply bid me goodbye.
 Now, what philosophical paths shall we tread together today?
 """)
 
-    context = {'user_intents': [], 'used_responses': {}}
-
     while True:
-        message = input("You: ")
-        if process_user_input(message, context, model, words, classes, data):
-            break
+        intent = get_intent_from_user()
+
+        if intent:
+            # The user should show these intents only when asked if he'd like an explanation or asked a question.
+            if intent == "interest" or intent == "disinterest":
+                bot_respond(random.choice(confusion_responses))
+                continue
+
+            handle_intent(intent)
+
+            if intent == "goodbye":
+                break
+        else:
+            bot_respond(random.choice(not_intent_responses))
 
 
 if __name__ == "__main__":

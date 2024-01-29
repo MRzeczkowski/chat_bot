@@ -20,7 +20,13 @@ def get_response(intent, intents_json, context):
         else:
             # Updating context to make sure not to greet again.
             context['user_intents'].append(greeting_intent)
-            initial_greeting = "Greetings! Now, to your question: "
+
+            greeting_intent_data = next(
+                (item for item in intents_json["intents"] if item["tag"] == greeting_intent), None)
+
+            greeting_obj = random.choice(greeting_intent_data["responses"])
+
+            initial_greeting = greeting_obj["text"] + "\n"
     else:
         initial_greeting = ""
 

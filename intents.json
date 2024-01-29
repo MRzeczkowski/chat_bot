@@ -564,6 +564,80 @@
             ]
         },
         {
+            "tag": "interest",
+            "patterns": [
+                "Yes",
+                "Tell me more",
+                "Absolutely",
+                "Please continue",
+                "I'm interested",
+                "Go on",
+                "Sure, proceed",
+                "Yes, I'd like to hear more",
+                "Definitely",
+                "Keep going"
+            ],
+            "responses": [
+                {
+                    "text": "Very well, let us delve deeper into this topic."
+                },
+                {
+                    "text": "Ah, a mind eager for knowledge! Let's continue our exploration."
+                },
+                {
+                    "text": "Your interest is commendable. Let me elaborate further."
+                },
+                {
+                    "text": "Indeed, there is much to discuss. Let us proceed."
+                },
+                {
+                    "text": "As you wish. We shall venture further into the depths of thought."
+                }
+            ]
+        },
+        {
+            "tag": "disinterest",
+            "patterns": [
+                "No",
+                "Let's talk about something else",
+                "Not really",
+                "Change the subject",
+                "I'm not interested",
+                "Let's move on",
+                "No, thank you",
+                "Something else, please",
+                "Not this topic",
+                "I'd prefer something else",
+                "Boring",
+                "Skip",
+                "Else",
+                "Different topic",
+                "Stop",
+                "Enough",
+                "Next",
+                "Other",
+                "Switch",
+                "Pass"
+            ],
+            "responses": [
+                {
+                    "text": "Very well, let's change the topic."
+                },
+                {
+                    "text": "As you wish, we shall redirect our discourse."
+                },
+                {
+                    "text": "Understood. Let us turn our attention elsewhere."
+                },
+                {
+                    "text": "A change of course can be refreshing. Let's explore a different subject."
+                },
+                {
+                    "text": "Indeed, the mind flourishes with variety. What other topic beckons?"
+                }
+            ]
+        },
+        {
             "tag": "goodbye",
             "patterns": [
                 "bye",
