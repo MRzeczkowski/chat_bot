@@ -1,13 +1,11 @@
 import json
 import string
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
 import nltk
 
 # Download necessary NLTK data
 nltk.download("punkt")
 nltk.download("wordnet")
-nltk.download('stopwords')
 
 
 def load_data():
@@ -18,7 +16,6 @@ def load_data():
 
 def preprocess_data(data):
     lemmatizer = WordNetLemmatizer()
-    stop_words = set(stopwords.words('english'))
     words = []
     classes = []
     doc_X = []
@@ -27,8 +24,8 @@ def preprocess_data(data):
     for intent in data["intents"]:
         for pattern in intent["patterns"]:
             tokens = nltk.word_tokenize(pattern)
-            words.extend([lemmatizer.lemmatize(word.lower(
-            )) for word in tokens if word not in string.punctuation and word.lower() not in stop_words])
+            words.extend([lemmatizer.lemmatize(word.lower())
+                         for word in tokens if word not in string.punctuation])
             doc_X.append(pattern)
             doc_y.append(intent["tag"])
 
