@@ -4,12 +4,10 @@ from predict import pred_class
 from response import get_response
 import numpy as np
 import random
-import nltk
-from nltk.stem import WordNetLemmatizer
 
 data = None
-words = None
-classes = None
+word_index = None
+index_to_intent = None
 model = None
 context = {'user_intents': [], 'used_responses': {}}
 
@@ -128,54 +126,38 @@ def handle_intent(intent):
 
 def get_intent_from_user():
     message = input(user_message_prefix)
-    intents = pred_class(message, words, classes, model)
-    if intents:
-        intent = intents[0]
+    indexes = pred_class(message, word_index, model)
+
+    if indexes:
+        intent = index_to_intent[indexes[0]]
         return intent
     else:
         return None
 
 
-def create_training_data(doc_X, doc_y):
-    training = []
-    out_empty = [0] * len(classes)
+def prepare_training_data(padded_sequences, categorical_vec):
+    indices = np.arange(padded_sequences.shape[0])
+    np.random.shuffle(indices)
 
-    for idx, doc in enumerate(doc_X):
-        bow = []
-        text_words = nltk.word_tokenize(doc)
-        lemmatizer = WordNetLemmatizer()
-        text_words = [lemmatizer.lemmatize(
-            word.lower()) for word in text_words]
-        for word in words:
-            bow.append(1) if word in text_words else bow.append(0)
-
-        output_row = list(out_empty)
-        output_row[classes.index(doc_y[idx])] = 1
-        training.append([bow, output_row])
-
-    random.shuffle(training)
-    training = np.array(training, dtype=object)
-    train_X = np.array(list(training[:, 0]))
-    train_y = np.array(list(training[:, 1]))
-
-    return train_X, train_y
+    return padded_sequences[indices], categorical_vec[indices]
 
 
 def main():
     global data
     data = load_data()
 
-    global words
-    global classes
-    words, classes, doc_X, doc_y = preprocess_data(data)
-    train_X, train_y = create_training_data(doc_X, doc_y)
-
-    input_shape = (len(train_X[0]),)
-    output_shape = len(train_y[0])
+    global word_index
+    global index_to_intent
+    word_index, index_to_intent, padded_sequences, categorical_vec = preprocess_data(
+        data)
 
     global model
-    model = build_model(input_shape, output_shape)
-    model = train_model(model, train_X, train_y)
+    model = build_model(word_index, categorical_vec.shape[1])
+
+    padded_sequences, categorical_vec = prepare_training_data(
+        padded_sequences, categorical_vec)
+
+    model = train_model(model, padded_sequences, categorical_vec)
 
     bot_name = '''
     888b      88 88                                                   88                        88                              

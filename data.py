@@ -1,11 +1,10 @@
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import json
-import string
-from nltk.stem import WordNetLemmatizer
-import nltk
 
-# Download necessary NLTK data
-nltk.download("punkt")
-nltk.download("wordnet")
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def load_data():
@@ -14,25 +13,50 @@ def load_data():
     return data
 
 
+def clean(line):
+    cleaned_line = ''
+    for char in line:
+        if char.isalpha():
+            cleaned_line += char
+        else:
+            cleaned_line += ' '
+    cleaned_line = ' '.join(cleaned_line.split())
+    return cleaned_line
+
+
 def preprocess_data(data):
-    lemmatizer = WordNetLemmatizer()
-    words = []
-    classes = []
-    doc_X = []
-    doc_y = []
+    intents = []
 
-    for intent in data["intents"]:
-        for pattern in intent["patterns"]:
-            tokens = nltk.word_tokenize(pattern)
-            words.extend([lemmatizer.lemmatize(word.lower())
-                         for word in tokens if word not in string.punctuation])
-            doc_X.append(pattern)
-            doc_y.append(intent["tag"])
+    text_input = []
 
-        if intent["tag"] not in classes:
-            classes.append(intent["tag"])
+    for intent in data['intents']:
 
-    words = sorted(set(words))
-    classes = sorted(set(classes))
+        for text in intent['patterns']:
+            text_input.append(clean(text))
+            intents.append(intent['tag'])
 
-    return words, classes, doc_X, doc_y
+    tokenizer = Tokenizer(filters='', oov_token='<unk>')
+    tokenizer.fit_on_texts(text_input)
+    sequences = tokenizer.texts_to_sequences(text_input)
+    padded_sequences = pad_sequences(sequences, padding='pre')
+
+    intent_to_index = {}
+    categorical_target = []
+    index = 0
+
+    for intent in intents:
+        if intent not in intent_to_index:
+            intent_to_index[intent] = index
+            index += 1
+        categorical_target.append(intent_to_index[intent])
+
+    num_classes = len(intent_to_index)
+
+    # Convert intent_to_index to index_to_intent
+    index_to_intent = {index: intent for intent,
+                       index in intent_to_index.items()}
+
+    categorical_vec = tf.keras.utils.to_categorical(categorical_target,
+                                                    num_classes=num_classes, dtype='int32')
+
+    return tokenizer.word_index, index_to_intent, padded_sequences, categorical_vec

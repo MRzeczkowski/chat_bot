@@ -1,26 +1,34 @@
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
+from tensorflow.keras.layers import Embedding, Bidirectional, LSTM, Dense, BatchNormalization, Dropout
 from tensorflow.keras.regularizers import l2
 
 
-def build_model(input_shape, output_shape):
-    model = Sequential()
-    model.add(Dense(128, input_shape=input_shape,
-              activation="relu", kernel_regularizer=l2(1e-4)))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.5))
-    model.add(Dense(64, activation="relu", kernel_regularizer=l2(1e-4)))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.3))
-    model.add(Dense(output_shape, activation="softmax"))
+def build_model(word_index, output_dim):
+    embed_dim = 300
+    lstm_num = 50
 
-    adam = tf.keras.optimizers.Adam(learning_rate=0.01, weight_decay=1e-6)
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=adam, metrics=["accuracy"])
+    model = Sequential([
+        Embedding(len(word_index) + 1, embed_dim),
+        Bidirectional(
+            LSTM(lstm_num, dropout=0.1)),
+        Dense(lstm_num, activation='relu',
+              kernel_regularizer=l2(1e-4)),
+        BatchNormalization(),
+        Dropout(0.4),
+        Dense(output_dim, activation='softmax')
+    ])
+
+    optimizer = tf.keras.optimizers.Adam(
+        learning_rate=0.001, weight_decay=1e-6)
+
+    model.compile(optimizer=optimizer,
+                  loss='categorical_crossentropy', metrics=['accuracy'])
+
     return model
 
 
-def train_model(model, train_X, train_y, epochs=200):
-    model.fit(x=train_X, y=train_y, epochs=epochs, verbose=0)
+def train_model(model, padded_sequences, categorical_vec, epochs=100):
+    model.fit(padded_sequences, categorical_vec, epochs=epochs, verbose=0)
     return model
