@@ -53,7 +53,8 @@ def get_response(intent, intents_json, context):
 
         followup_questions = intent_data.get("followup_questions", [])
 
-        if not followup_questions:
+        # W don't return a followup question if there are none but also do so randomly to not bombard the user with questions.
+        if not followup_questions or random.choice([True, False]):
             return response_index, response, explanation, None, None
 
         followup_question_obj = random.choice(followup_questions)

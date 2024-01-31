@@ -12,7 +12,7 @@ def build_model(word_index, output_dim):
     model = Sequential([
         Embedding(len(word_index) + 1, embed_dim),
         Bidirectional(
-            LSTM(lstm_num, dropout=0.1)),
+            LSTM(lstm_num, dropout=0.4)),
         Dense(lstm_num, activation='relu',
               kernel_regularizer=l2(1e-4)),
         BatchNormalization(),
