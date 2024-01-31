@@ -16,7 +16,7 @@ def build_model(word_index, output_dim):
         Dense(lstm_num, activation='relu',
               kernel_regularizer=l2(1e-4)),
         BatchNormalization(),
-        Dropout(0.4),
+        Dropout(0.5),
         Dense(output_dim, activation='softmax')
     ])
 
