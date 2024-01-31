@@ -11,14 +11,21 @@ To interaktywny agent konwersacyjny zaprojektowany, aby symulować dyskusje z fi
  - Bot zadaje pytania, które kierują użytkownika do różnych tematów.
  - Gdy każda odpowiedź na temat została wyczerpana, użytkownik jest o tym informowany.
 
+### Zależności
+Bot został napisany w języku Python w wersji 3.11.6 i wykorzystuje biblioteki Numpy i Tensorflow.
+
+W celu uruchomienia bot'a należy zainstalować zależności: `pip install -r requirements.txt`
+
+Uruchomić skrypt: `python3 main.py`.
+
 ## Opis
 
 Celem projektu było stowrzenie bot'a który będzie udzielał odpowiedzi związanych z wyrażonymi przez użytkownika intencjami. Odpowiedzi miały być różnorodne, bogate, powiązane z kontekstem rozmowy. Interakcje dynamiczne dzięki zadawaniu przez bot'a pytań, propozycji tematów do poruszenia i reakcji na odpowiedzi użytkownika - co jest szczególnie istotne ze względu na wybraną domenę (filozofię Nietzschego) która nie musi być dobrze znana użytkownikowi.
 
-Bot został napisany w języku Python i jego pierwsza wersja powstała na podstawie artykułu ze strony Towards Data Science [1]. 
+Pierwsza wersja bot'a powstała na podstawie artykułu ze strony Towards Data Science [1]. 
 
 Bot składa się z trzech ogólnych części:
-1. Pliku `intents.json` który zawiera możliwe intencje użytkownika, wzorce wiadomości użytkownika i treść odpowiedzi bot'a. 
+1. Bazy wiedzy `intents.json` która zawiera możliwe intencje użytkownika, wzorce wiadomości użytkownika i treści odpowiedzi bot'a. 
 
 2. Sieci neuronowej która na podstawie zawartości `intents.json` uczy się przewidywać intencje użytkownika.
 
@@ -30,7 +37,7 @@ Uruchomienie bot'a wyświetla informacje dot. tematów na które można rozmawia
 
 Przewidziano 14 intencji użytkownika, każda intencja składa się z kilku elementów:
 - `tag` - nazwa intencji, 
-- `patterns` - lista wzroców możliwych wiadomości użytkownika, 
+- `patterns` - lista wzroców wiadomości użytkownika, 
 - `responses` - lista odpowiedzi bot'a, która zawiera treść odpowiedzi w polu `text` i może mieć dodatkowe pole `explanation` zawierające dodatkowe szczegóły dotyczące odpowiedzi
 - `responses_exhausted` - lista odpowiedzi które są udzielane użytkownikowi kiedy wyczerpie on odpowiedzi z listy `responses`
 - `followup_questions` - lista pytań które bot może zadać użytkownikowi po tym jak odpowie na jego wiadomość. Każde pytanie składa się z treści (`question`) i pola `proposed_intent` - czyli proponowanej intencji do której bot przejdzie jeśli użytkownik odpowie twierdząco na zadane pytanie
@@ -90,7 +97,7 @@ Zastosowano architekturę zoptymalizowaną do rozpoznawania intencji w czatach n
 Do trenowania sieci neuronowej zastosowano dane z `intents.json`. Wejściem do sieci są wzorce `patterns` poddane tokenizacji, a oczekiwanym wyjściem `tag` poddany kodowaniu One-hot. 
 
 Sieć neuronowa składa się z następujących warstw:
-1. **Embedding**: Konwertuje indeks słów indeks słów występujących we wzorach `patterns` na gęste wektory cech o stałym rozmiarze.
+1. **Embedding**: Konwertuje indeks słów występujących we wzorach `patterns` na gęste wektory cech o stałym rozmiarze.
 Pozwala sieci lepiej zrozumieć zależności i kontekst w danych tekstowych.
 2. **Bidirectional LSTM**: Dwukierunkowa sieć rekurencyjna LSTM, przetwarzająca sekwencje danych z obu kierunków.
 LSTM jest skuteczna w przechwytywaniu zależności w danych sekwencyjnych, takich jak tekst. 
