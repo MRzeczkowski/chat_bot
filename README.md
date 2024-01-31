@@ -11,7 +11,7 @@ To interaktywny agent konwersacyjny zaprojektowany, aby symulować dyskusje z fi
  - Bot zadaje pytania, które kierują użytkownika do różnych tematów.
  - Gdy każda odpowiedź na temat została wyczerpana, użytkownik jest o tym informowany.
 
-### Zależności
+### Użycie
 Bot został napisany w języku Python w wersji 3.11.6 i wykorzystuje biblioteki Numpy i Tensorflow.
 
 W celu uruchomienia bot'a należy zainstalować zależności: `pip install -r requirements.txt`
@@ -112,7 +112,14 @@ Zastosowano regularyzację L2 do zapobiegania nadmiernemu dopasowaniu przez nał
 Użyto optymalizatora Adam z niewielkim tempem uczenia i regulacją wagi.
 Model jest kompilowany z funkcją straty categorical_crossentropy, oraz metryką 'accuracy' (dokładność).
 
+#### Możliwe usprawnienia
 
+Czasami występuje problem przeuczenia i nie poprawna identyfikacja intencji. Temu problemowi mogą zaradzić następujące zmiany:
+- zwiększenie ilości wzorców i ich różnorodności
+- wyrównanie ilości wzorców dla każdej intencji
+- zmniejszenie podobieństwa wzorców
+- podział danych zbiory: trenujący, walidacyjny i testowy. Bieżąca implementacja nie dokonuje tego podziału po cześci ze względu na niewystarczającą ilość wzorców wiadomości użytkownika
+- zapisywanie najlepszego modelu zmiast tworzenia nowego podczas każdego uruchomienia bot'a
 
 ## Żródła:
 [1] https://towardsdatascience.com/a-simple-chatbot-in-python-with-deep-learning-3e8669997758
